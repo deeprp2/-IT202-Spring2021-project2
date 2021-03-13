@@ -1,0 +1,26 @@
+#container
+{
+    margin: auto;
+    max-height: 600px;
+    position: relative;
+    max-width: 600px;
+}
+
+#canvas
+{
+    border: 1px solid gray;
+    height: 100%;
+    width: 100%;
+}
+
+#controls
+{
+    border-radius: 12px;
+    background: #338BA8;
+    color: white;
+    bottom: 100px;
+    left: 230px;
+    position: absolute;
+    width: 100px;
+    height: 50px;
+}
