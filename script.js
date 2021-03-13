@@ -3,13 +3,27 @@ let canvas = document.getElementById('canvas')
 let ctx = canvas.getContext('2d')
 
 const player = {
-    positionX: 0,
-    positionY: 0,
+    playerImg: null,
+    positionX: 10,
+    positionY: canvas.height / 2,
     height: 100,
     width: 100,
+    speed: 10,
     move: function (key) {
         switch (key) {
-            case 'ArrowUp': this.positionY = (this.positionY > 20) ? this.positionY - 10 : 10
+            case 'ArrowUp':
+                this.positionY = ((this.positionY - this.speed) > (canvas.height / this.speed)) ? this.positionY - this.speed : canvas.height / 10
+                break;
+            case 'ArrowDown':
+                this.positionY = ((this.positionY + this.speed) < 555) ? this.positionY + this.speed : 555
+                break;
+        }
+    },
+    createPlayerImage: function () {
+        this.playerImg = new Image()
+        this.playerImg.src = 'assets/images/monkey.png'
+        this.playerImg.onload = () => {
+            ctx.drawImage(this.playerImg, player.positionX, player.positionY, player.width, player.height)
         }
     }
 }
@@ -26,27 +40,26 @@ window.onload = function () {
     // attach listener to start button
     let startButton = document.getElementById("play-button")
     startButton.addEventListener('click', startGame)
+    document.addEventListener('keydown', function (event)  {
+        player.move(event.key)
+    })
 }
 
 function startGame() {
     clear()
+    player.createPlayerImage()
     draw()
 }
 
 function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
     drawGameStats()
     drawPlayer()
     requestAnimationFrame(draw)
 }
 
 function drawPlayer() {
-    let playerImg = new Image()
-    playerImg.src = 'assets/images/monkey.png'
-    player.positionX = 5
-    player.positionY = 100
-    playerImg.onload = function () {
-        ctx.drawImage(playerImg, player.positionX, player.positionY, player.width, player.height)
-    }
+    ctx.drawImage(player.playerImg, player.positionX, player.positionY, player.width, player.height)
 }
 
 function drawGameStats() {
@@ -54,16 +67,16 @@ function drawGameStats() {
     ctx.moveTo(0, canvas.height / 10)
     ctx.lineTo(canvas.width, canvas.height / 10)
     ctx.stroke()
-    ctx.font="20px Arial";
+    ctx.font = "20px Arial";
     ctx.fillText(`level: ${game.level}`, canvas.width / 15, canvas.height / 15)
     ctx.fillText(`score: ${game.score}`, canvas.width / 2.3, canvas.height / 15)
     ctx.fillText(`lives: ${game.lives}`, canvas.width / 1.2, canvas.height / 15)
 }
 
 function showGameInstructions() {
-    ctx.font="30px Georgia";
+    ctx.font = "30px Georgia";
     ctx.fillText("Instructions", 250, 100)
-    ctx.font="20px Georgia";
+    ctx.font = "20px Georgia";
     ctx.fillText("1. Use arrow keys to move the monkey along the screen", 50, 150)
     ctx.fillText("2. Avoid hitting the stone", 50, 200)
     ctx.fillText("3. To score, collect the bananas", 50, 250)
@@ -73,7 +86,7 @@ function showGameInstructions() {
 }
 
 // clear canvas
-function clear(){
-    ctx.clearRect(0,0, canvas.width, canvas.height);
+function clear() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     playButton.style.display = 'none'
 }
