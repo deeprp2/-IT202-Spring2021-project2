@@ -1,12 +1,17 @@
-// background image
-const backgroundImageURL = 'assets/images/canvas-background.png'
-
+let playButton = document.getElementById('play-button')
 let canvas = document.getElementById('canvas')
 let ctx = canvas.getContext('2d')
 
 window.onload = function () {
-    setCanvasBackground()
     showGameInstructions()
+
+    // attach listener to start button
+    let startButton = document.getElementById("play-button")
+    startButton.addEventListener('click', startGame)
+}
+
+function startGame() {
+    clear()
 }
 
 function showGameInstructions() {
@@ -20,18 +25,9 @@ function showGameInstructions() {
     ctx.fillText("5. Click the start button to start the game", 50, 350)
 }
 
-// set background image of canvas
-function setCanvasBackground () {
-    let background = new Image()
-    background.src = backgroundImageURL
-    background.onload = function () {
-        ctx.drawImage(background, 0, 0)
-        showGameInstructions()
-    }
-}
-
 
 // clear canvas
 function clear(){
-    ctx.clearRect(0,0,c.width,c.height);
+    ctx.clearRect(0,0, canvas.width, canvas.height);
+    playButton.style.display = 'none'
 }
