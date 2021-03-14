@@ -130,6 +130,9 @@ function draw() {
 
                     // increase level logic
                     if (game.score % 2 === 0) {
+                        game.level++;
+                        updateLevel()
+
                         gameObject.speed += 1
                         player.speed += 1
                         game.objectfreq -= 5
@@ -194,20 +197,26 @@ function clear() {
 
 function detectCollision(a, b) {
     if (a && b) {
-        return Math.sqrt(Math.pow(a.positionX - b.positionX, 2) + Math.pow(a.positionY - b.positionY, 2)) < 30;
+        return Math.sqrt(Math.pow(a.positionX - b.positionX, 2) + Math.pow(a.positionY - b.positionY, 2)) < 50;
     }
 
     return false
 }
 
 function updateScore() {
-    ctx.clearRect(canvas.width / 15, canvas.height / 15, canvas.width, canvas.height)
-    ctx.fillText(`level: ${game.level}`, canvas.width / 15, canvas.height / 15)
+    ctx.clearRect(canvas.width / 2.3, canvas.height / 15, canvas.width, canvas.height)
+    ctx.fillText(`score: ${game.score}`, canvas.width / 2.3, canvas.height / 15)
 }
 
 function updateLives() {
-    ctx.clearRect(canvas.width / 2.3, canvas.height / 15, canvas.width, canvas.height)
-    ctx.fillText(`score: ${game.score}`, canvas.width / 2.3, canvas.height / 15)
+    ctx.clearRect(canvas.width / 1.2, canvas.height / 15, canvas.width, canvas.height)
+    ctx.fillText(`lives: ${game.lives}`, canvas.width / 1.2, canvas.height / 15)
+}
+
+function updateLevel() {
+    console.log("inside update level")
+    ctx.clearRect(canvas.width / 15, canvas.height / 15, canvas.width, canvas.height)
+    ctx.fillText(`level: ${game.level}`, canvas.width / 15, canvas.height / 15)
 }
 
 function gameOver() {
