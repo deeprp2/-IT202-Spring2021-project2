@@ -245,5 +245,7 @@ function resetGame() {
     player.width = 100
     player.speed = 10
 
+    gameObject.speed = 5
+
     startGame()
 }
