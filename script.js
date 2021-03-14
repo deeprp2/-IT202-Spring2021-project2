@@ -35,6 +35,7 @@ const game = {
     gameObjects: [],
     increment: 0,
     gameOver: false,
+    objectfreq: 70
 }
 
 const gameObject = {
@@ -106,7 +107,7 @@ function drawObject(obj) {
 }
 
 function draw() {
-    if (game.increment === 100) {
+    if (game.increment === game.objectfreq) {
         createObjects()
         game.increment = 0;
     } else {
@@ -126,6 +127,15 @@ function draw() {
                 if (game.gameObjects[i].type === 'banana') {
                     game.score++
                     updateScore()
+
+                    // increase level logic
+                    if (game.score % 2 === 0) {
+                        gameObject.speed += 1
+                        player.speed += 1
+                        game.objectfreq -= 5
+
+                        if (game.objectfreq <= 0) game.objectfreq = 70
+                    }
                 } else if (game.gameObjects[i].type === 'cactus') {
                     game.lives--;
 
@@ -171,7 +181,7 @@ function showGameInstructions() {
     ctx.fillText("1. Use arrow keys to move the monkey along the screen", 50, 150)
     ctx.fillText("2. Avoid hitting the cactus", 50, 200)
     ctx.fillText("3. To score, collect the bananas", 50, 250)
-    ctx.fillText("4. There are 5 levels in the game, each level with increase difficulty", 50, 300)
+    ctx.fillText("4. There are few levels in the game, each level with increase difficulty", 50, 300)
     ctx.fillText("5. Click the play button to start the game", 50, 350)
     playButton.style.display = 'unset'
 }
@@ -183,7 +193,11 @@ function clear() {
 }
 
 function detectCollision(a, b) {
-    return Math.sqrt(Math.pow(a.positionX - b.positionX, 2) + Math.pow(a.positionY - b.positionY, 2)) < 30;
+    if (a && b) {
+        return Math.sqrt(Math.pow(a.positionX - b.positionX, 2) + Math.pow(a.positionY - b.positionY, 2)) < 30;
+    }
+
+    return false
 }
 
 function updateScore() {
@@ -213,6 +227,7 @@ function resetGame() {
     game.lives = 5
     game.gameObjects = []
     game.increment = 0
+    game.objectfreq = 80
 
     // reset player settings
     player.positionX = 0
