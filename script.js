@@ -33,7 +33,8 @@ const game = {
     level: 0,
     lives: 5,
     gameObjects: [],
-    increment: 0
+    increment: 0,
+    gameOver: false,
 }
 
 const gameObject = {
@@ -76,7 +77,12 @@ window.onload = function () {
 
     // attach listener to start button
     let startButton = document.getElementById("play-button")
-    startButton.addEventListener('click', startGame)
+    startButton.addEventListener('click', function() {
+        if (game.gameOver)
+            resetGame()
+        else
+            startGame()
+    })
     document.addEventListener('keydown', function (event) {
         player.move(event.key)
     })
@@ -117,19 +123,30 @@ function draw() {
             game.gameObjects[i].move()
 
             if (detectCollision(player, game.gameObjects[i])) {
-                if (game.gameObjects[i].type === 'banana')
+                if (game.gameObjects[i].type === 'banana') {
                     game.score++
-                else
-                    game.score--;
+                    updateScore()
+                } else if (game.gameObjects[i].type === 'cactus') {
+                    game.lives--;
+
+                    if (game.lives <= 0) {
+                        game.gameOver = true
+                    }
+
+                    updateLives()
+                }
 
                 game.gameObjects.splice(game.gameObjects[i], 1)
-
-                updateScore()
             }
         }
     }
 
-    requestAnimationFrame(draw)
+    if (!game.gameOver) {
+        requestAnimationFrame(draw)
+    } else {
+        gameOver()
+    }
+
 }
 
 function drawPlayer() {
@@ -152,9 +169,9 @@ function showGameInstructions() {
     ctx.fillText("Instructions", 250, 100)
     ctx.font = "20px Georgia";
     ctx.fillText("1. Use arrow keys to move the monkey along the screen", 50, 150)
-    ctx.fillText("2. Avoid hitting the stone", 50, 200)
+    ctx.fillText("2. Avoid hitting the cactus", 50, 200)
     ctx.fillText("3. To score, collect the bananas", 50, 250)
-    ctx.fillText("4. There are 10 levels in the game, each level with increase difficulty", 50, 300)
+    ctx.fillText("4. There are 5 levels in the game, each level with increase difficulty", 50, 300)
     ctx.fillText("5. Click the play button to start the game", 50, 350)
     playButton.style.display = 'unset'
 }
@@ -172,4 +189,37 @@ function detectCollision(a, b) {
 function updateScore() {
     ctx.clearRect(canvas.width / 15, canvas.height / 15, canvas.width, canvas.height)
     ctx.fillText(`level: ${game.level}`, canvas.width / 15, canvas.height / 15)
+}
+
+function updateLives() {
+    ctx.clearRect(canvas.width / 2.3, canvas.height / 15, canvas.width, canvas.height)
+    ctx.fillText(`score: ${game.score}`, canvas.width / 2.3, canvas.height / 15)
+}
+
+function gameOver() {
+    clear()
+    ctx.font = "30px Georgia";
+    ctx.fillText("Game Over", 275, 100)
+    ctx.font = "20px Georgia";
+    ctx.fillText("1. Press play button to replay", 50, 150)
+    playButton.style.display = 'unset'
+}
+
+function resetGame() {
+    // reset game settings
+    game.gameOver = false
+    game.score = 0
+    game.level = 0
+    game.lives = 5
+    game.gameObjects = []
+    game.increment = 0
+
+    // reset player settings
+    player.positionX = 0
+    player.positionY = canvas.height / 2
+    player.height = 100
+    player.width = 100
+    player.speed = 10
+
+    startGame()
 }
