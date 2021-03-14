@@ -41,8 +41,8 @@ const gameObject = {
     type: '',
     positionX: canvas.width - 85,
     positionY: '',
-    height: 100,
-    width: 100,
+    height: 85,
+    width: 125,
     speed: 5,
     move: function () {
         if (this.positionX - this.speed >= 0) {
@@ -52,6 +52,7 @@ const gameObject = {
         }
     },
     createImage: function (type) {
+        this.type = type
         switch (type) {
             case "banana":
                 this.image = new Image()
@@ -114,6 +115,17 @@ function draw() {
         for (let i = 0; i < game.gameObjects.length; i++) {
             drawObject(game.gameObjects[i])
             game.gameObjects[i].move()
+
+            if (detectCollision(player, game.gameObjects[i])) {
+                if (game.gameObjects[i].type === 'banana')
+                    game.score++
+                else
+                    game.score--;
+
+                game.gameObjects.splice(game.gameObjects[i], 1)
+
+                updateScore()
+            }
         }
     }
 
@@ -151,4 +163,13 @@ function showGameInstructions() {
 function clear() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     playButton.style.display = 'none'
+}
+
+function detectCollision(a, b) {
+    return Math.sqrt(Math.pow(a.positionX - b.positionX, 2) + Math.pow(a.positionY - b.positionY, 2)) < 30;
+}
+
+function updateScore() {
+    ctx.clearRect(canvas.width / 15, canvas.height / 15, canvas.width, canvas.height)
+    ctx.fillText(`level: ${game.level}`, canvas.width / 15, canvas.height / 15)
 }
