@@ -4,7 +4,7 @@ let ctx = canvas.getContext('2d')
 
 const player = {
     playerImg: null,
-    positionX: 10,
+    positionX: 0,
     positionY: canvas.height / 2,
     height: 100,
     width: 100,
@@ -31,7 +31,43 @@ const player = {
 const game = {
     score: 0,
     level: 0,
-    lives: 5
+    lives: 5,
+    gameObjects: [],
+    increment: 0
+}
+
+const gameObject = {
+    image: null,
+    type: '',
+    positionX: canvas.width - 85,
+    positionY: '',
+    height: 100,
+    width: 100,
+    speed: 5,
+    move: function () {
+        if (this.positionX - this.speed >= 0) {
+            this.positionX -= this.speed
+        } else {
+            game.gameObjects.splice(this, 1)
+        }
+    },
+    createImage: function (type) {
+        switch (type) {
+            case "banana":
+                this.image = new Image()
+                this.image.src = 'assets/images/banana.png'
+                this.image.onload = () => {
+                    ctx.drawImage(this.image, this.positionX, 30, this.width, this.height)
+                }
+                break;
+            case "cactus":
+                this.image = new Image()
+                this.image.src = 'assets/images/cactus.png'
+                this.image.onload = () => {
+                    ctx.drawImage(this.image, this.positionX, 30, this.width, this.height)
+                }
+        }
+    }
 }
 
 window.onload = function () {
@@ -40,7 +76,7 @@ window.onload = function () {
     // attach listener to start button
     let startButton = document.getElementById("play-button")
     startButton.addEventListener('click', startGame)
-    document.addEventListener('keydown', function (event)  {
+    document.addEventListener('keydown', function (event) {
         player.move(event.key)
     })
 }
@@ -51,10 +87,36 @@ function startGame() {
     draw()
 }
 
+function createObjects() {
+    let obj = Object.assign({}, gameObject)
+    obj.positionY = Math.floor(Math.random() * (555 - canvas.height / 10)) + (canvas.height / 10)
+    obj.createImage(Math.floor(Math.random() * Math.floor(2)) ? 'banana' : 'cactus')
+    game.gameObjects.push(obj)
+}
+
+function drawObject(obj) {
+    ctx.drawImage(obj.image, obj.positionX, obj.positionY, obj.width, obj.height)
+}
+
 function draw() {
+    if (game.increment === 100) {
+        createObjects()
+        game.increment = 0;
+    } else {
+        game.increment++;
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     drawGameStats()
     drawPlayer()
+
+    if (game.gameObjects.length > 0) {
+        for (let i = 0; i < game.gameObjects.length; i++) {
+            drawObject(game.gameObjects[i])
+            game.gameObjects[i].move()
+        }
+    }
+
     requestAnimationFrame(draw)
 }
 
