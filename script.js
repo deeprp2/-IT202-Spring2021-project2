@@ -152,6 +152,8 @@ function draw() {
                 game.gameObjects.splice(game.gameObjects[i], 1)
             }
         }
+    } else {
+        createObjects()
     }
 
     if (!game.gameOver) {
@@ -179,7 +181,7 @@ function drawGameStats() {
 
 function showGameInstructions() {
     ctx.font = "30px Georgia";
-    ctx.fillText("Instructions", 250, 100)
+    ctx.fillText("Instructions", 400, 100)
     ctx.font = "20px Georgia";
     ctx.fillText("1. Use arrow keys to move the monkey along the screen", 50, 150)
     ctx.fillText("2. Avoid hitting the cactus", 50, 200)
@@ -214,7 +216,6 @@ function updateLives() {
 }
 
 function updateLevel() {
-    console.log("inside update level")
     ctx.clearRect(canvas.width / 15, canvas.height / 15, canvas.width, canvas.height)
     ctx.fillText(`level: ${game.level}`, canvas.width / 15, canvas.height / 15)
 }
@@ -222,7 +223,7 @@ function updateLevel() {
 function gameOver() {
     clear()
     ctx.font = "30px Georgia";
-    ctx.fillText("Game Over", 275, 100)
+    ctx.fillText("Game Over", 400, 100)
     ctx.font = "20px Georgia";
     ctx.fillText("1. Press play button to replay", 50, 150)
     playButton.style.display = 'unset'
