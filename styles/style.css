@@ -26,3 +26,20 @@
 #data-div {
     background-image: url("../assets/images/canvas-background.png");
 }
+
+@media screen and (min-width: 781px) and (max-width: 840px) {
+    #container {
+        width: 100%;
+        height: 100%;
+    }
+
+    #data-div {
+        width: 100%;
+        height: 100%;
+    }
+
+    #canvas {
+        width: 100%;
+        height: 100%;
+    }
+}

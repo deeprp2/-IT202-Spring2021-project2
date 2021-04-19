@@ -87,6 +87,14 @@ window.onload = function () {
     document.addEventListener('keydown', function (event) {
         player.move(event.key)
     })
+
+    document.addEventListener("deviceorientation", (event) => {
+        if (event.beta < 45) {
+            player.move('ArrowDown')
+        } else {
+            player.move('ArrowUp')
+        }
+    }, false)
 }
 
 function startGame() {
