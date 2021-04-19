@@ -88,14 +88,15 @@ window.onload = function () {
         player.move(event.key)
     })
 
-    document.addEventListener("deviceorientation", (event) => {
-        alert(event.beta)
-        if (event.beta < 45) {
-            player.move('ArrowDown')
-        } else {
-            player.move('ArrowUp')
-        }
-    }, false)
+    if ("DeviceOrientationEvent" in window) {
+        document.addEventListener("deviceorientation", (event) => {
+            if (event.beta < 45) {
+                player.move('ArrowDown')
+            } else {
+                player.move('ArrowUp')
+            }
+        }, false)
+    }
 }
 
 function startGame() {
