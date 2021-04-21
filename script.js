@@ -89,7 +89,6 @@ window.onload = function () {
     })
 
     if ("DeviceOrientationEvent" in window) {
-        // alert("rotated")
         window.addEventListener("deviceorientation", (event) => {
             if (event.beta < 45) {
                 player.move('ArrowDown')
